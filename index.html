@@ -3,58 +3,854 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stammtisch Pro</title>
+  <title>Sebastian Krätschmer – iOS Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f4ef;
+      --bg2: #eeeae2;
+      --card: #fffdf9;
+      --border: rgba(0,0,0,0.08);
+      --border2: rgba(0,0,0,0.14);
+      --text: #1a1714;
+      --muted: #7a7068;
+      --accent: #2d5a3d;
+      --accent-light: #e8f2ec;
+      --amber: #b8640a;
+      --amber-light: #fef3e2;
+      --blue: #1a4a7a;
+      --blue-light: #e8f0f8;
+      --teal: #0f6e56;
+      --teal-light: #e4f4ef;
+      --coral: #8b3a2a;
+      --coral-light: #fdf0ed;
+      --purple: #4a3580;
+      --purple-light: #eeeafb;
+      --green: #2d6b2d;
+      --green-light: #eaf4ea;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5efe6;
-      color: #1f1a17;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
-    main {
-      max-width: 760px;
+
+    /* NAV */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,244,239,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .topbar-inner {
+      max-width: 900px;
       margin: 0 auto;
-      padding: 48px 20px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
     }
-    h1 {
-      font-size: 2.4rem;
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .logo span { color: var(--accent); }
+    .topnav { display: flex; gap: 0; }
+    .topnav-btn {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-family: var(--sans);
+      font-weight: 400;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .topnav-btn:hover { color: var(--text); background: var(--bg2); }
+    .topnav-btn.active { color: var(--text); font-weight: 500; }
+
+    /* HERO */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: end;
+    }
+    .hero-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--muted); }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 440px;
+    }
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-end;
+      padding-bottom: 4px;
+    }
+    .stat { text-align: right; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* MAIN CONTENT */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 3rem;
+    }
+
+    /* APP GRID */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 16px;
+    }
+    .app-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .app-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-1px);
+    }
+    .app-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 1rem; }
+    .app-icon {
+      width: 54px; height: 54px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    .app-name {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .app-cat {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .app-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.25rem;
+    }
+    .app-actions { display: flex; align-items: center; justify-content: space-between; }
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--sans);
+      color: var(--card);
+      background: var(--text);
+      border: none;
+      border-radius: 99px;
+      padding: 7px 14px;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .store-btn:hover { opacity: 0.8; }
+    .detail-btn {
+      font-size: 12px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      padding: 4px 0;
+      transition: color 0.15s;
+    }
+    .detail-btn:hover { color: var(--text); }
+
+    /* APP DETAIL */
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      padding: 0;
+      margin-bottom: 2rem;
+      transition: color 0.15s;
+    }
+    .detail-back:hover { color: var(--text); }
+
+    .detail-hero {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-icon {
+      width: 72px; height: 72px;
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .detail-name {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .detail-cat {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
       margin-bottom: 12px;
     }
-    p {
-      line-height: 1.6;
-      font-size: 1.05rem;
+
+    /* SUB TABS */
+    .subtabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
     }
-    .card {
-      background: #fffaf4;
-      border: 1px solid #e6d8c7;
-      border-radius: 18px;
-      padding: 20px;
-      margin-top: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    .subtab {
+      padding: 9px 16px;
+      font-size: 13px;
+      font-family: var(--sans);
+      font-weight: 400;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      cursor: pointer;
+      transition: color 0.15s;
     }
-    a {
-      color: #8b4513;
+    .subtab:hover { color: var(--text); }
+    .subtab.active { color: var(--text); font-weight: 500; border-bottom-color: var(--text); }
+
+    .subpanel { display: none; }
+    .subpanel.active { display: block; }
+
+    /* FEATURES */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+    .feat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem;
+    }
+    .feat-ico { font-size: 20px; margin-bottom: 0.5rem; }
+    .feat h3 { font-size: 0.875rem; font-weight: 500; margin-bottom: 0.3rem; }
+    .feat p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    .info-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 10px;
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .info-block h3 { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.35rem; }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .pill {
+      padding: 4px 11px;
+      border-radius: 99px;
+      font-size: 11px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--bg);
+    }
+
+    .cta-block {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--accent-light);
+      border: 1px solid rgba(45,90,61,0.15);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .cta-block a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
       text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
+    .cta-block a:hover { text-decoration: underline; }
+
+    /* PRIVACY */
+    .privacy-intro {
+      background: var(--bg2);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .privacy-section { margin-bottom: 1.5rem; }
+    .privacy-section h3 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .privacy-section p, .privacy-section ul {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    .privacy-section ul { padding-left: 1.2rem; }
+    .privacy-section ul li { margin-bottom: 4px; }
+    .privacy-stand {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 1.5rem;
+    }
+
+    /* CONTACT / GLOBAL PRIVACY */
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 16px;
+    }
+    .contact-card h2 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+    .contact-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .contact-link:hover { text-decoration: underline; }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .hero { grid-template-columns: 1fr; padding: 3rem 1.25rem 2.5rem; }
+      .hero-stats { flex-direction: row; align-items: flex-start; }
+      .stat { text-align: left; }
+      .main { padding: 0 1.25rem 4rem; }
+      .app-grid { grid-template-columns: 1fr; }
+      .topbar { padding: 0 1.25rem; }
+      .topnav-btn { padding: 8px 10px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Stammtisch Pro</h1>
-    <p>Stammtisch Pro ist eine Würfelspiel-App mit klassischen Trink- und Kneipenspielen wie Schocken, Mäxchen und weiteren Spielmodi für den gemeinsamen Abend.</p>
 
-    <div class="card">
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="logo" onclick="showSection('alle')">SK <span>Apps</span></span>
+    <nav class="topnav">
+      <button class="topnav-btn active" onclick="showSection('alle',this)">Apps</button>
+      <button class="topnav-btn" onclick="showSection('kontakt',this)">Kontakt</button>
+      <button class="topnav-btn" onclick="showSection('datenschutz-global',this)">Datenschutz</button>
+    </nav>
+  </div>
+</div>
+
+<div class="hero" id="hero">
+  <div>
+    <div class="hero-label">iOS & Android · Deutschland</div>
+    <h1>Sebastian<br>Krätschmer<br><em>Apps</em></h1>
+    <p class="hero-sub">Unabhängiger App-Entwickler aus Butzbach. Praktische Apps für den deutschen Alltag – von Mietrecht bis Kneipenspaß.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Apps im Store</div></div>
+    <div class="stat"><div class="stat-num">iOS</div><div class="stat-lbl">& Android</div></div>
+    <div class="stat"><div class="stat-num">DE</div><div class="stat-lbl">Hauptmarkt</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ALLE APPS -->
+  <section class="section active" id="sec-alle">
+    <div class="divider"></div>
+    <div class="app-grid">
+
+      <div class="app-card">
+        <div class="app-top">
+          <div class="app-icon" style="background:var(--amber-light)">🎲</div>
+          <div><div class="app-name">Stammtisch Pro</div><div class="app-cat">Unterhaltung</div></div>
+        </div>
+        <div class="app-desc">Klassische Kneipenwürfelspiele wie Schocken und Mäxchen – mit 3D-Würfeln und Aktionskarten für den perfekten Abend.</div>
+        <div class="app-actions">
+          <a class="store-btn" href="https://apps.apple.com/us/app/stammtisch-pro-schocken-w%C3%BCrfel/id6757311913" target="_blank">↗ App Store</a>
+          <button class="detail-btn" onclick="showDetail('stammtisch')">Details ansehen →</button>
+        </div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-top">
+          <div class="app-icon" style="background:var(--blue-light)">🏠</div>
+          <div><div class="app-name">MietkostenFix</div><div class="app-cat">Finanzen · Immobilien</div></div>
+        </div>
+        <div class="app-desc">Rechtskonforme Nebenkostenabrechnungen nach §556 BGB – schnell erstellt, als PDF exportiert. Für DE, FR, ES und IT.</div>
+        <div class="app-actions">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <a class="store-btn" href="https://apps.apple.com/us/app/mietkostenfix/id6757408417" target="_blank">↗ App Store</a>
+            <span class="store-btn" style="background:var(--bg2);color:var(--muted);cursor:default;border:1px solid var(--border)">⏳ Google Play – bald</span>
+          </div>
+          <button class="detail-btn" onclick="showDetail('miete')">Details ansehen →</button>
+        </div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-top">
+          <div class="app-icon" style="background:var(--teal-light)">📋</div>
+          <div><div class="app-name">ÜbergabeFix</div><div class="app-cat">Immobilien · Produktivität</div></div>
+        </div>
+        <div class="app-desc">Wohnungsübergaben rechtssicher dokumentieren – mit Fotos, Zählerständen und automatisch erstelltem Protokoll als PDF.</div>
+        <div class="app-actions">
+          <a class="store-btn" href="https://apps.apple.com/us/app/%C3%BCbergabefix/id6759838496" target="_blank">↗ App Store</a>
+          <button class="detail-btn" onclick="showDetail('uebergabe')">Details ansehen →</button>
+        </div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-top">
+          <div class="app-icon" style="background:var(--coral-light)">👶</div>
+          <div><div class="app-name">ElterngeldFix</div><div class="app-cat">Familie · Behörden</div></div>
+        </div>
+        <div class="app-desc">Geführter Assistent für den Elterngeld-Antrag – alle 16 Bundesländer, feldgenaue Hilfestellungen, rechtliche Hinweise.</div>
+        <div class="app-actions">
+          <a class="store-btn" href="https://apps.apple.com/us/app/elterngeldfix/id6761411896" target="_blank">↗ App Store</a>
+          <button class="detail-btn" onclick="showDetail('elterngeld')">Details ansehen →</button>
+        </div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-top">
+          <div class="app-icon" style="background:var(--purple-light)">🔑</div>
+          <div><div class="app-name">KautionKlar</div><div class="app-cat">Recht · Wohnen</div></div>
+        </div>
+        <div class="app-desc">Rechtliche Orientierung rund um Mietkaution – Fristen, Ansprüche und Musterbriefe. Lokal, offline, ohne Datenspeicherung.</div>
+        <div class="app-actions">
+          <a class="store-btn" href="https://apps.apple.com/us/app/kautionklar/id6758919930" target="_blank">↗ App Store</a>
+          <button class="detail-btn" onclick="showDetail('kaution')">Details ansehen →</button>
+        </div>
+      </div>
+
+      <div class="app-card">
+        <div class="app-top">
+          <div class="app-icon" style="background:var(--green-light)">💸</div>
+          <div><div class="app-name">Patte – Finanzen Split</div><div class="app-cat">Finanzen · Gruppen</div></div>
+        </div>
+        <div class="app-desc">Gemeinsame Ausgaben fair aufteilen – ideal für WGs, Reisen und Freundesgruppen. Offline, ohne Cloud.</div>
+        <div class="app-actions">
+          <a class="store-btn" href="https://apps.apple.com/us/app/patte-finanzen-split/id6759177346" target="_blank">↗ App Store</a>
+          <button class="detail-btn" onclick="showDetail('patte')">Details ansehen →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DETAIL PAGES -->
+  <section class="section" id="sec-stammtisch">
+    <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
+    <div class="detail-hero">
+      <div class="detail-icon" style="background:var(--amber-light)">🎲</div>
+      <div>
+        <div class="detail-cat">Unterhaltung · Würfelspiele</div>
+        <div class="detail-name">Stammtisch Pro</div>
+        <a class="store-btn" href="https://apps.apple.com/us/app/stammtisch-pro-schocken-w%C3%BCrfel/id6757311913" target="_blank" style="margin-top:8px;display:inline-flex">↗ Im App Store öffnen</a>
+      </div>
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('stammtisch','features',this)">Funktionen</button>
+      <button class="subtab" onclick="showSubtab('stammtisch','spiele',this)">Spielmodi</button>
+      <button class="subtab" onclick="showSubtab('stammtisch','datenschutz',this)">Datenschutz</button>
+    </div>
+    <div class="subpanel active" id="stammtisch-features">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">🎲</div><h3>3D-Würfel</h3><p>Photorealistisches Würfelsystem mit Physik und Animationen</p></div>
+        <div class="feat"><div class="feat-ico">🃏</div><h3>Aktionskarten</h3><p>Zusätzliche Karten für noch mehr Abwechslung am Tisch</p></div>
+        <div class="feat"><div class="feat-ico">📵</div><h3>Offline</h3><p>Kein Internet nötig – läuft überall zuverlässig</p></div>
+        <div class="feat"><div class="feat-ico">🍺</div><h3>Kneipenmodus</h3><p>Einfache Bedienung auch mit vollem Glas</p></div>
+        <div class="feat"><div class="feat-ico">🛒</div><h3>In-App-Käufe</h3><p>Werbung entfernen oder Zusatzfunktionen freischalten</p></div>
+      </div>
+    </div>
+    <div class="subpanel" id="stammtisch-spiele">
+      <div class="info-block"><h3>🎯 Mäxchen</h3><p>Das klassische Bluff-Würfelspiel mit Lügen und List – wer erwischt wird, trinkt.</p></div>
+      <div class="info-block"><h3>🥃 Schocken</h3><p>Würfeln, pokern, bezahlen – der Klassiker an jedem deutschen Stammtisch.</p></div>
+      <div class="info-block"><h3>🎲 Weitere Spielmodi</h3><p>Mehr Spiele für jeden Abend und jede Runde – laufend erweitert.</p></div>
+    </div>
+    <div class="subpanel" id="stammtisch-datenschutz">
+      <div class="privacy-stand">Stand: 23. April 2026</div>
+      <div class="privacy-intro">Stammtisch Pro legt großen Wert auf den Schutz Ihrer Daten. Diese Erklärung informiert über die Datenverarbeitung in der App.</div>
+      <div class="privacy-section"><h3>1. Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com</p></div>
+      <div class="privacy-section"><h3>2. Lokale Datenspeicherung</h3><p>Spielernamen, Spielstände, Einstellungen und Spielerfotos werden ausschließlich lokal auf Ihrem Gerät gespeichert und nicht automatisch an uns übermittelt.</p></div>
+      <div class="privacy-section"><h3>3. Kamera</h3><p>Der Kamerazugriff wird ausschließlich für die Aufnahme oder Auswahl von Spielerbildern verwendet. Die Inhalte verbleiben auf Ihrem Gerät.</p></div>
+      <div class="privacy-section"><h3>4. Lokales Netzwerk / Multiplayer</h3><p>Die App kann das lokale Netzwerk für Multiplayer-Funktionen verwenden. Dabei werden Spielinformationen zwischen verbundenen Geräten übertragen. Diese Funktion wird in einer zukünftigen Version verfügbar sein.</p></div>
+      <div class="privacy-section"><h3>5. Werbung über Google AdMob</h3><p>Die App verwendet Google AdMob (Google Ireland Limited). Dabei können IP-Adresse, Gerätekennungen und Interaktionsdaten verarbeitet werden. Diese Funktion wird in einer zukünftigen Version verfügbar sein. Weitere Infos: <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></p></div>
+      <div class="privacy-section"><h3>6. In-App-Käufe</h3><p>Die Zahlungsabwicklung erfolgt ausschließlich über Apple. Wir erhalten keine Zahlungsdaten.</p></div>
+      <div class="privacy-section"><h3>7. Ihre Rechte</h3><ul><li>Auskunft, Berichtigung, Löschung</li><li>Einschränkung der Verarbeitung</li><li>Datenübertragbarkeit</li><li>Widerruf einer Einwilligung</li></ul></div>
+      <div class="privacy-section"><h3>8. Kontakt</h3><p>apps.kraetschmer@gmail.com</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-miete">
+    <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
+    <div class="detail-hero">
+      <div class="detail-icon" style="background:var(--blue-light)">🏠</div>
+      <div>
+        <div class="detail-cat">Finanzen · Immobilien · iOS & Android</div>
+        <div class="detail-name">MietkostenFix</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <a class="store-btn" href="https://apps.apple.com/us/app/mietkostenfix/id6757408417" target="_blank" style="display:inline-flex">↗ App Store</a>
+          <span class="store-btn" style="display:inline-flex;background:var(--bg2);color:var(--muted);cursor:default;border:1px solid var(--border)">⏳ Google Play – bald verfügbar</span>
+        </div>
+      </div>
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('miete','features',this)">Funktionen</button>
+      <button class="subtab" onclick="showSubtab('miete','maerkte',this)">Märkte</button>
+      <button class="subtab" onclick="showSubtab('miete','datenschutz',this)">Datenschutz</button>
+    </div>
+    <div class="subpanel active" id="miete-features">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">📄</div><h3>PDF-Export</h3><p>Rechtskonforme Abrechnungen nach §556 BGB</p></div>
+        <div class="feat"><div class="feat-ico">🧮</div><h3>Verteilerschlüssel</h3><p>Alle gängigen Umlageschlüssel unterstützt</p></div>
+        <div class="feat"><div class="feat-ico">🌍</div><h3>International</h3><p>DE, FR, ES, IT mit länderspezifischer Logik</p></div>
+        <div class="feat"><div class="feat-ico">☁️</div><h3>Cloud-Backup</h3><p>Verschlüsselte Datensicherung in iCloud oder Dropbox</p></div>
+        <div class="feat"><div class="feat-ico">💶</div><h3>Flexibles Abo</h3><p>9,99 € / Jahr oder 24,99 € einmalig</p></div>
+      </div>
+    </div>
+    <div class="subpanel" id="miete-maerkte">
+      <div class="info-block"><h3>🇩🇪 Deutschland</h3><p>Nebenkostenabrechnung nach §556 BGB mit allen deutschen Umlageschlüsseln und gesetzlicher Einspruchsfrist.</p></div>
+      <div class="info-block"><h3>🇫🇷 Frankreich</h3><p>Charges locatives nach französischem Mietrecht mit länderspezifischen Verteilerschlüsseln.</p></div>
+      <div class="info-block"><h3>🇪🇸 Spanien</h3><p>Gastos de comunidad nach spanischem Recht mit lokalen Abrechnungsstandards.</p></div>
+      <div class="info-block"><h3>🇮🇹 Italien</h3><p>Spese condominiali nach italienischem Mietrecht.</p></div>
+    </div>
+    <div class="subpanel" id="miete-datenschutz">
+      <div class="privacy-stand">Stand: 21. Februar 2026</div>
+      <div class="privacy-intro">MietkostenFix wurde nach dem Prinzip Privacy by Design entwickelt. Alle Daten bleiben lokal auf Ihrem Gerät.</div>
+      <div class="privacy-section"><h3>1. Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com<br><br>Hinweis: Für die personenbezogenen Daten Ihrer Mieter bleiben Sie im Sinne der DSGVO der Verantwortliche.</p></div>
+      <div class="privacy-section"><h3>2. Lokale Datenspeicherung</h3><p>Sämtliche eingegebenen Daten werden ausschließlich lokal gespeichert. Keine automatische Synchronisation, kein Entwicklerzugriff, keine Tracking-Tools.</p></div>
+      <div class="privacy-section"><h3>3. Verarbeitete Daten</h3><ul><li>Stammdaten des Vermieters (Name, Anschrift, ggf. IBAN für Briefköpfe)</li><li>Mieterdaten (Name, Anschrift, Wohnfläche, Ein-/Auszugsdaten)</li><li>Verbrauchs- und Kostendaten (Zählerstände, Rechnungen)</li><li>Support-E-Mails (nur zur Bearbeitung Ihrer Anfrage, Art. 6 Abs. 1 lit. f DSGVO)</li></ul></div>
+      <div class="privacy-section"><h3>4. Cloud-Backup</h3><p>Bei aktivierter Backup-Funktion exportiert die App eine verschlüsselte Datei. Den Speicherort (z. B. iCloud, Dropbox) bestimmen Sie selbst. Der App-Anbieter hat keinen Zugriff auf Ihre Backups.</p></div>
+      <div class="privacy-section"><h3>5. In-App-Käufe & PDF</h3><p>Zahlungsabwicklung über Apple StoreKit – keine Zahlungsdaten beim Entwickler. PDF-Erstellung erfolgt vollständig lokal.</p></div>
+      <div class="privacy-section"><h3>6. Apple Analytics</h3><p>Sofern Sie in iOS der Weitergabe von Analysedaten zugestimmt haben, erhält der Entwickler anonymisierte Absturzberichte ohne personenbezogene Informationen.</p></div>
+      <div class="privacy-section"><h3>7. Ihre Rechte</h3><ul><li>Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17)</li><li>Datenübertragbarkeit (Art. 20) über die Backup-Funktion</li><li>Da der Anbieter keinen Datenzugriff hat, erfolgt die Ausübung Ihrer Rechte direkt in der App.</li></ul></div>
+      <div class="privacy-section"><h3>8. Kontakt</h3><p>apps.kraetschmer@gmail.com</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-uebergabe">
+    <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
+    <div class="detail-hero">
+      <div class="detail-icon" style="background:var(--teal-light)">📋</div>
+      <div>
+        <div class="detail-cat">Immobilien · Produktivität</div>
+        <div class="detail-name">ÜbergabeFix</div>
+        <a class="store-btn" href="https://apps.apple.com/us/app/%C3%BCbergabefix/id6759838496" target="_blank" style="margin-top:8px;display:inline-flex">↗ Im App Store öffnen</a>
+      </div>
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('uebergabe','features',this)">Funktionen</button>
+      <button class="subtab" onclick="showSubtab('uebergabe','datenschutz',this)">Datenschutz</button>
+    </div>
+    <div class="subpanel active" id="uebergabe-features">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">📸</div><h3>Fotodokumentation</h3><p>Mängel und Zustände mit Fotos festhalten</p></div>
+        <div class="feat"><div class="feat-ico">⚡</div><h3>Zählerstände</h3><p>Strom, Gas, Wasser direkt erfassen</p></div>
+        <div class="feat"><div class="feat-ico">↩️</div><h3>Undo / Redo</h3><p>Änderungen jederzeit rückgängig machen</p></div>
+        <div class="feat"><div class="feat-ico">✍️</div><h3>Digitale Unterschrift</h3><p>Unterschriften direkt auf dem Display</p></div>
+        <div class="feat"><div class="feat-ico">⚖️</div><h3>§551 BGB</h3><p>Rechtliche Hinweise zur Kautionsgrenze</p></div>
+        <div class="feat"><div class="feat-ico">📄</div><h3>PDF-Export</h3><p>Fertiges Protokoll als PDF teilen</p></div>
+      </div>
+    </div>
+    <div class="subpanel" id="uebergabe-datenschutz">
+      <div class="privacy-stand">Stand: 04. März 2026</div>
+      <div class="privacy-intro">ÜbergabeFix wurde nach dem Prinzip der maximalen Datensparsamkeit (Privacy by Design) entwickelt. Alle Daten bleiben ausschließlich auf Ihrem Gerät.</div>
+      <div class="privacy-section"><h3>1. Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com</p></div>
+      <div class="privacy-section"><h3>2. Lokale Datenspeicherung</h3><p>Alle Eingaben (Texte, Adressen, Zählerstände, Fotos, Unterschriften) werden ausschließlich lokal gespeichert. Kein Entwicklerzugriff, keine Serverübertragung.</p></div>
+      <div class="privacy-section"><h3>3. Verarbeitete Daten</h3><ul><li>Namen und Adressen von Mietern und Vermietern</li><li>Zustandsbeschreibungen von Räumen und Inventar</li><li>Zählerstände und Schlüsselanzahlen</li><li>Beweisfotos und digitale Unterschriften</li></ul></div>
+      <div class="privacy-section"><h3>4. Kamera</h3><p>Die Kamera wird ausschließlich für Fotos von Zählerständen oder Wohnungsmängeln verwendet. Die Fotos werden nicht übermittelt.</p></div>
+      <div class="privacy-section"><h3>5. PDF-Export & Weitergabe</h3><p>Weitergabe des Protokolls erfolgt ausschließlich durch Sie selbst über die systemeigenen iOS-Funktionen (Mail, AirDrop etc.).</p></div>
+      <div class="privacy-section"><h3>6. Apple iCloud</h3><p>Bei aktivierter iCloud-Synchronisation können Daten über Ihr Apple-Konto gesichert werden. Der Entwickler hat keinen Zugriff darauf.</p></div>
+      <div class="privacy-section"><h3>7. Ihre Rechte</h3><p>Sie haben die volle Kontrolle über Ihre Daten. Löschen Sie einzelne Einträge in der App oder deinstallieren Sie die App vollständig.</p></div>
+      <div class="privacy-section"><h3>8. Kontakt</h3><p>apps.kraetschmer@gmail.com</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-elterngeld">
+    <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
+    <div class="detail-hero">
+      <div class="detail-icon" style="background:var(--coral-light)">👶</div>
+      <div>
+        <div class="detail-cat">Familie · Behörden</div>
+        <div class="detail-name">ElterngeldFix</div>
+        <a class="store-btn" href="https://apps.apple.com/us/app/elterngeldfix/id6761411896" target="_blank" style="margin-top:8px;display:inline-flex">↗ Im App Store öffnen</a>
+      </div>
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('elterngeld','features',this)">Funktionen</button>
+      <button class="subtab" onclick="showSubtab('elterngeld','datenschutz',this)">Datenschutz</button>
+    </div>
+    <div class="subpanel active" id="elterngeld-features">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">🗺️</div><h3>Alle Bundesländer</h3><p>Alle 16 Bundesländer mit jeweiligen Besonderheiten</p></div>
+        <div class="feat"><div class="feat-ico">🧭</div><h3>Geführter Assistent</h3><p>Feldgenaue Hilfestellungen durch das gesamte Formular</p></div>
+        <div class="feat"><div class="feat-ico">🔒</div><h3>100 % lokal</h3><p>Alle Daten bleiben auf Ihrem Gerät</p></div>
+        <div class="feat"><div class="feat-ico">📵</div><h3>Offline</h3><p>Keine Internetverbindung erforderlich</p></div>
+        <div class="feat"><div class="feat-ico">💳</div><h3>3,99 € einmalig</h3><p>Kein Abo, kein Stress</p></div>
+      </div>
+    </div>
+    <div class="subpanel" id="elterngeld-datenschutz">
+      <div class="privacy-stand">Stand: März 2025</div>
+      <div class="privacy-intro">ElterngeldFix erhebt, speichert und überträgt keinerlei personenbezogene Daten. Die App funktioniert vollständig offline.</div>
+      <div class="privacy-section"><h3>1. Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com</p></div>
+      <div class="privacy-section"><h3>2. Keine Datenerhebung</h3><p>Es gibt keine Serververbindung, keine Nutzerkonten und keine Registrierung. Alle Eingaben verbleiben lokal auf Ihrem Gerät.</p></div>
+      <div class="privacy-section"><h3>3. Lokal gespeicherte Einstellungen</h3><ul><li>Ob der Intro-Screen bereits angezeigt wurde</li><li>Ob der Disclaimer bestätigt wurde</li><li>Ob die Vollversion erworben wurde</li></ul></div>
+      <div class="privacy-section"><h3>4. In-App-Kauf</h3><p>Der Kauf der Vollversion wird vollständig über Apples StoreKit abgewickelt. Der Entwickler hat keinen Zugriff auf Ihre Zahlungsdaten. Es gelten die Datenschutzbestimmungen von Apple.</p></div>
+      <div class="privacy-section"><h3>5. Keine Analyse- oder Tracking-Tools</h3><ul><li>Keine Analyse- oder Tracking-Dienste</li><li>Keine Werbenetzwerke</li><li>Keine Crash-Reporting-Dienste</li><li>Keine Cookies oder ähnliche Technologien</li></ul></div>
+      <div class="privacy-section"><h3>6. Kontakt</h3><p>apps.kraetschmer@gmail.com</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-kaution">
+    <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
+    <div class="detail-hero">
+      <div class="detail-icon" style="background:var(--purple-light)">🔑</div>
+      <div>
+        <div class="detail-cat">Recht · Wohnen</div>
+        <div class="detail-name">KautionKlar</div>
+        <a class="store-btn" href="https://apps.apple.com/us/app/kautionklar/id6758919930" target="_blank" style="margin-top:8px;display:inline-flex">↗ Im App Store öffnen</a>
+      </div>
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('kaution','features',this)">Funktionen</button>
+      <button class="subtab" onclick="showSubtab('kaution','datenschutz',this)">Datenschutz</button>
+    </div>
+    <div class="subpanel active" id="kaution-features">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">📬</div><h3>Musterbriefe</h3><p>Fertige Vorlagen für Kautions-Rückforderung</p></div>
+        <div class="feat"><div class="feat-ico">⏱️</div><h3>Fristen</h3><p>Übersicht aller gesetzlichen Fristen</p></div>
+        <div class="feat"><div class="feat-ico">⚖️</div><h3>Rechtsanalyse</h3><p>Rechtliche Einordnung Ihrer Situation</p></div>
+        <div class="feat"><div class="feat-ico">📅</div><h3>Zeitstrahl</h3><p>Deadline-Übersicht auf einen Blick</p></div>
+        <div class="feat"><div class="feat-ico">📵</div><h3>Offline</h3><p>Keine Internetverbindung erforderlich</p></div>
+      </div>
+    </div>
+    <div class="subpanel" id="kaution-datenschutz">
+      <div class="privacy-stand">Stand: 10. Februar 2026</div>
+      <div class="privacy-intro">KautionKlar erhebt, speichert und überträgt keine personenbezogenen Daten an externe Server.</div>
+      <div class="privacy-section"><h3>1. Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com</p></div>
+      <div class="privacy-section"><h3>2. Keine Datenspeicherung</h3><p>Alle Eingaben (z. B. Name, Adresse, Kautionsbetrag) werden ausschließlich im flüchtigen Gerätespeicher verarbeitet und nicht dauerhaft gespeichert, sofern Sie den generierten Text nicht selbst exportieren.</p></div>
+      <div class="privacy-section"><h3>3. Keine Drittanbieter</h3><ul><li>Keine Analyse-Tools (z. B. Google Analytics, Firebase)</li><li>Keine Werbenetzwerke</li><li>Keine Cookies oder Identifikations-IDs</li></ul></div>
+      <div class="privacy-section"><h3>4. Standortdaten</h3><p>Die App fragt keine Standortdaten ab. Die Länderauswahl erfolgt manuell durch den Nutzer.</p></div>
+      <div class="privacy-section"><h3>5. Datenexport</h3><p>Briefentwürfe können über das iOS Share Sheet geteilt werden. Die Kontrolle über die Übertragung liegt vollständig beim Nutzer.</p></div>
+      <div class="privacy-section"><h3>6. Ihre Rechte</h3><p>Ihre DSGVO-Rechte (Auskunft, Löschung, Sperrung) sind durch das Privacy-by-Design-Konzept der App bereits maximal geschützt.</p></div>
+      <div class="privacy-section"><h3>7. Kontakt</h3><p>apps.kraetschmer@gmail.com</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-patte">
+    <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
+    <div class="detail-hero">
+      <div class="detail-icon" style="background:var(--green-light)">💸</div>
+      <div>
+        <div class="detail-cat">Finanzen · Gruppen</div>
+        <div class="detail-name">Patte – Finanzen Split</div>
+        <a class="store-btn" href="https://apps.apple.com/us/app/patte-finanzen-split/id6759177346" target="_blank" style="margin-top:8px;display:inline-flex">↗ Im App Store öffnen</a>
+      </div>
+    </div>
+    <div class="subtabs">
+      <button class="subtab active" onclick="showSubtab('patte','features',this)">Funktionen</button>
+      <button class="subtab" onclick="showSubtab('patte','datenschutz',this)">Datenschutz</button>
+    </div>
+    <div class="subpanel active" id="patte-features">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">👥</div><h3>Gruppenausgaben</h3><p>Mehrere Personen, faire Aufteilung</p></div>
+        <div class="feat"><div class="feat-ico">📷</div><h3>Beleg scannen</h3><p>OCR-Erkennung von Kassenbons per Kamera</p></div>
+        <div class="feat"><div class="feat-ico">🔐</div><h3>Face ID / Touch ID</h3><p>Optionale Biometrie-Sperre für Ihre Daten</p></div>
+        <div class="feat"><div class="feat-ico">🔄</div><h3>P2P-Sync</h3><p>Gerät-zu-Gerät-Synchronisation via WLAN/Bluetooth</p></div>
+        <div class="feat"><div class="feat-ico">📊</div><h3>CSV-Export</h3><p>Daten als CSV oder Excel exportieren</p></div>
+        <div class="feat"><div class="feat-ico">📵</div><h3>Offline First</h3><p>Kein Internet, kein Server, keine Cloud</p></div>
+      </div>
+    </div>
+    <div class="subpanel" id="patte-datenschutz">
+      <div class="privacy-stand">Stand: 16. Februar 2026</div>
+      <div class="privacy-intro">Patte verfolgt einen Offline-First-Ansatz. Alle Daten bleiben lokal auf Ihrem Gerät – keine Übertragung an externe Server.</div>
+      <div class="privacy-section"><h3>1. Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com</p></div>
+      <div class="privacy-section"><h3>2. Lokale Datenspeicherung</h3><p>Alle Daten (Ausgaben, Budgets, Kontostände, Personennamen) werden ausschließlich lokal per SwiftData gespeichert. Keine Serverübertragung, kein Entwicklerzugriff.</p></div>
+      <div class="privacy-section"><h3>3. Gerätefunktionen</h3><ul><li><strong>Kamera (OCR):</strong> Fotos von Kassenbons werden lokal per Apple Vision Framework analysiert. Keine Übertragung an Dritte.</li><li><strong>Face ID / Touch ID:</strong> Die biometrische Prüfung erfolgt ausschließlich durch das iOS-Betriebssystem. Die App hat keinen Zugriff auf biometrische Daten.</li><li><strong>P2P-Synchronisation:</strong> Daten werden verschlüsselt direkt via MultipeerConnectivity übertragen. Kein Server zwischengeschaltet.</li></ul></div>
+      <div class="privacy-section"><h3>4. Keine Tracking-Tools</h3><p>Keine Analyse-Software, keine Werbenetzwerke, keine Nutzerprofile.</p></div>
+      <div class="privacy-section"><h3>5. Ihre Rechte</h3><ul><li>Auskunft & Export: Daten jederzeit in der App einsehen und als CSV/Excel exportieren</li><li>Löschung: App deinstallieren oder einzelne Einträge entfernen</li></ul></div>
+      <div class="privacy-section"><h3>6. Kontakt</h3><p>apps.kraetschmer@gmail.com</p></div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section class="section" id="sec-kontakt">
+    <div class="divider"></div>
+    <div class="contact-card">
       <h2>Kontakt</h2>
-      <p>E-Mail: <a href="mailto:apps.kraetschmer@gmail.com">apps.kraetschmer@gmail.com</a></p>
+      <p>Sebastian Krätschmer<br>Weinstraße 6a<br>35510 Butzbach<br>Deutschland</p>
+      <a class="contact-link" href="mailto:apps.kraetschmer@gmail.com">✉ apps.kraetschmer@gmail.com</a>
     </div>
+    <div class="contact-card">
+      <h2>Über mich</h2>
+      <p>Unabhängiger iOS-Entwickler aus Butzbach. Ich entwickle und pflege alle Apps solo – mit Fokus auf praktische Alltagslösungen für den deutschen Markt.</p>
+    </div>
+  </section>
 
-    <div class="card">
+  <!-- DATENSCHUTZ GLOBAL -->
+  <section class="section" id="sec-datenschutz-global">
+    <div class="divider"></div>
+    <div class="contact-card">
       <h2>Datenschutz</h2>
-      <p>Die Datenschutzerklärung wird hier bereitgestellt.</p>
+      <p>Alle Apps von Sebastian Krätschmer wurden nach dem Prinzip Privacy by Design entwickelt. Personenbezogene Daten werden nur soweit verarbeitet, wie es die jeweilige App-Funktion erfordert. Es werden keine Daten ohne Ihr Wissen weitergegeben.</p>
     </div>
-  </main>
+    <div class="info-block" style="margin-bottom:10px"><h3>Verantwortlicher</h3><p>Sebastian Krätschmer · Weinstraße 6a · 35510 Butzbach<br>E-Mail: apps.kraetschmer@gmail.com</p></div>
+    <div class="info-block" style="margin-bottom:10px"><h3>Datenschutz je App</h3><p>Die vollständige Datenschutzerklärung für jede App finden Sie auf der jeweiligen App-Detailseite unter dem Reiter „Datenschutz".</p>
+      <div class="pill-row" style="margin-top:12px">
+        <span class="pill" style="cursor:pointer" onclick="showDetail('stammtisch')">🎲 Stammtisch Pro</span>
+        <span class="pill" style="cursor:pointer" onclick="showDetail('miete')">🏠 MietkostenFix</span>
+        <span class="pill" style="cursor:pointer" onclick="showDetail('uebergabe')">📋 ÜbergabeFix</span>
+        <span class="pill" style="cursor:pointer" onclick="showDetail('elterngeld')">👶 ElterngeldFix</span>
+        <span class="pill" style="cursor:pointer" onclick="showDetail('kaution')">🔑 KautionKlar</span>
+        <span class="pill" style="cursor:pointer" onclick="showDetail('patte')">💸 Patte</span>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /main -->
+
+<script>
+  const sectionMap = {
+    'alle': 'sec-alle',
+    'stammtisch': 'sec-stammtisch',
+    'miete': 'sec-miete',
+    'uebergabe': 'sec-uebergabe',
+    'elterngeld': 'sec-elterngeld',
+    'kaution': 'sec-kaution',
+    'patte': 'sec-patte',
+    'kontakt': 'sec-kontakt',
+    'datenschutz-global': 'sec-datenschutz-global'
+  };
+
+  function showSection(key, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionMap[key]).classList.add('active');
+    document.querySelectorAll('.topnav-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showDetail(key) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionMap[key]).classList.add('active');
+    document.querySelectorAll('.topnav-btn').forEach(b => b.classList.remove('active'));
+    window.scrollTo(0, 0);
+  }
+
+  function showSubtab(app, tab, btn) {
+    document.querySelectorAll('#sec-' + app + ' .subpanel').forEach(p => p.classList.remove('active'));
+    document.getElementById(app + '-' + tab).classList.add('active');
+    document.querySelectorAll('#sec-' + app + ' .subtab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
 </body>
 </html>
