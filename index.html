@@ -405,6 +405,14 @@
       font-size: 24px;
       flex-shrink: 0;
       border: 1px solid rgba(255,255,255,.06);
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .app-icon img, .detail-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .app-name {
@@ -525,6 +533,8 @@
       font-size: 34px;
       border: 1px solid rgba(255,255,255,.06);
       flex-shrink: 0;
+      overflow: hidden;
+      padding: 0;
     }
 
     .detail-name {
@@ -819,7 +829,7 @@
 
       <div class="app-card" style="--card-accent: rgba(251,191,36,.08)">
         <div class="app-top">
-          <div class="app-icon" style="background:rgba(251,191,36,.1)">🎲</div>
+          <div class="app-icon"><img src="IMG_1690.png" alt="Stammtisch Pro"></div>
           <div>
             <div class="app-name">Stammtisch Pro</div>
             <div class="app-cat">Unterhaltung · Würfelspiele</div>
@@ -834,7 +844,7 @@
 
       <div class="app-card" style="--card-accent: rgba(96,165,250,.08)">
         <div class="app-top">
-          <div class="app-icon" style="background:rgba(96,165,250,.1)">🏠</div>
+          <div class="app-icon"><img src="IMG_0173.jpeg" alt="MietkostenFix"></div>
           <div>
             <div class="app-name">MietkostenFix</div>
             <div class="app-cat">Finanzen · Immobilien</div>
@@ -852,7 +862,7 @@
 
       <div class="app-card" style="--card-accent: rgba(45,212,191,.08)">
         <div class="app-top">
-          <div class="app-icon" style="background:rgba(45,212,191,.1)">📋</div>
+          <div class="app-icon"><img src="IMG_1051.jpeg" alt="ÜbergabeFix"></div>
           <div>
             <div class="app-name">ÜbergabeFix</div>
             <div class="app-cat">Immobilien · Produktivität</div>
@@ -867,7 +877,7 @@
 
       <div class="app-card" style="--card-accent: rgba(251,113,133,.08)">
         <div class="app-top">
-          <div class="app-icon" style="background:rgba(251,113,133,.1)">👶</div>
+          <div class="app-icon"><img src="IMG_1193.jpeg" alt="ElterngeldFix"></div>
           <div>
             <div class="app-name">ElterngeldFix</div>
             <div class="app-cat">Familie · Behörden</div>
@@ -882,7 +892,7 @@
 
       <div class="app-card" style="--card-accent: rgba(167,139,250,.08)">
         <div class="app-top">
-          <div class="app-icon" style="background:rgba(167,139,250,.1)">🔑</div>
+          <div class="app-icon"><img src="IMG_0687.jpeg" alt="KautionKlar"></div>
           <div>
             <div class="app-name">KautionKlar</div>
             <div class="app-cat">Recht · Wohnen</div>
@@ -897,7 +907,7 @@
 
       <div class="app-card" style="--card-accent: rgba(52,211,153,.08)">
         <div class="app-top">
-          <div class="app-icon" style="background:rgba(52,211,153,.1)">💸</div>
+          <div class="app-icon"><img src="IMG_0798.png" alt="Patte"></div>
           <div>
             <div class="app-name">Patte – Finanzen Split</div>
             <div class="app-cat">Finanzen · Gruppen</div>
@@ -917,7 +927,7 @@
   <section class="section" id="sec-stammtisch">
     <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
     <div class="detail-hero">
-      <div class="detail-icon" style="background:rgba(251,191,36,.1)">🎲</div>
+      <div class="detail-icon"><img src="IMG_1690.png" alt="Stammtisch Pro"></div>
       <div>
         <div class="detail-cat">Unterhaltung · Würfelspiele</div>
         <div class="detail-name">Stammtisch Pro</div>
@@ -961,7 +971,7 @@
   <section class="section" id="sec-miete">
     <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
     <div class="detail-hero">
-      <div class="detail-icon" style="background:rgba(96,165,250,.1)">🏠</div>
+      <div class="detail-icon"><img src="IMG_0173.jpeg" alt="MietkostenFix"></div>
       <div>
         <div class="detail-cat">Finanzen · Immobilien · iOS &amp; Android</div>
         <div class="detail-name">MietkostenFix</div>
@@ -1009,7 +1019,7 @@
   <section class="section" id="sec-uebergabe">
     <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
     <div class="detail-hero">
-      <div class="detail-icon" style="background:rgba(45,212,191,.1)">📋</div>
+      <div class="detail-icon"><img src="IMG_1051.jpeg" alt="ÜbergabeFix"></div>
       <div>
         <div class="detail-cat">Immobilien · Produktivität</div>
         <div class="detail-name">ÜbergabeFix</div>
@@ -1048,7 +1058,7 @@
   <section class="section" id="sec-elterngeld">
     <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
     <div class="detail-hero">
-      <div class="detail-icon" style="background:rgba(251,113,133,.1)">👶</div>
+      <div class="detail-icon"><img src="IMG_1193.jpeg" alt="ElterngeldFix"></div>
       <div>
         <div class="detail-cat">Familie · Behörden</div>
         <div class="detail-name">ElterngeldFix</div>
@@ -1084,7 +1094,7 @@
   <section class="section" id="sec-kaution">
     <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
     <div class="detail-hero">
-      <div class="detail-icon" style="background:rgba(167,139,250,.1)">🔑</div>
+      <div class="detail-icon"><img src="IMG_0687.jpeg" alt="KautionKlar"></div>
       <div>
         <div class="detail-cat">Recht · Wohnen</div>
         <div class="detail-name">KautionKlar</div>
@@ -1121,7 +1131,7 @@
   <section class="section" id="sec-patte">
     <button class="detail-back" onclick="showSection('alle')">← Alle Apps</button>
     <div class="detail-hero">
-      <div class="detail-icon" style="background:rgba(52,211,153,.1)">💸</div>
+      <div class="detail-icon"><img src="IMG_0798.png" alt="Patte"></div>
       <div>
         <div class="detail-cat">Finanzen · Gruppen</div>
         <div class="detail-name">Patte – Finanzen Split</div>
